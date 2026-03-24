@@ -37,6 +37,7 @@ export const useSavedOffersStore = create<SavedOffersState>()(
     {
       name: "saved-offers",
       storage: createJSONStorage(() => localStorage),
+      skipHydration: true,
     },
   ),
 );

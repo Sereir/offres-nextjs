@@ -56,7 +56,7 @@ export function JobCard({ offer, showMetadata = false }: JobCardProps) {
             type="button"
             aria-label={isSaved ? "Retirer des offres enregistrées" : "Enregistrer l'offre"}
             onClick={handleToggleSavedOffer}
-            className="pointer-events-auto inline-flex items-center text-slate-500"
+            className="pointer-events-auto inline-flex cursor-pointer items-center rounded-sm text-slate-500 transition-colors hover:text-blue-600"
           >
             {isSaved ? (
               <BookmarkOutlinedIcon className="text-[20px] text-blue-600" />

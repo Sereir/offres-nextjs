@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
+import { ApplicationForm } from "@/components/application-form";
 import { SiteLayout } from "@/components/site-layout";
 import { SectionTitle } from "@/components/section-title";
 import { TagChip } from "@/components/tag-chip";
@@ -57,20 +58,7 @@ export default async function OfferDetailPage({ params }: OfferDetailPageProps) 
             ))}
         </div>
 
-        <form className="space-y-2">
-          <textarea
-            placeholder="Postuler à cette offre..."
-            className="h-28 w-full border border-slate-300 bg-white p-3 text-sm outline-none"
-          />
-          <div className="flex justify-end">
-            <button
-              type="submit"
-              className="border border-blue-700 bg-blue-700 px-3 py-1 text-xs text-white"
-            >
-              Envoyer
-            </button>
-          </div>
-        </form>
+        <ApplicationForm offerSlug={offer.slug} offerTitle={offer.title} />
       </main>
     </SiteLayout>
   );

@@ -1,11 +1,11 @@
 import { SiteLayout } from "@/components/site-layout";
+import { ApplicationsHistorySection } from "@/components/applications-history-section";
 import { SavedOffersSection } from "@/components/saved-offers-section";
 import { SectionTitle } from "@/components/section-title";
 import { getOffers } from "@/lib/offers-repository";
 
 export default async function ProfilePage() {
   const items = await getOffers();
-  const history = items.slice(0, 2);
 
   return (
     <SiteLayout>
@@ -20,14 +20,7 @@ export default async function ProfilePage() {
           <h2 className="mb-4 border-b border-slate-300 pb-2 text-sm font-semibold text-blue-600">
             Historique des candidatures
           </h2>
-          <div className="space-y-4">
-            {history.map((offer) => (
-              <article key={offer.slug} className="border-b border-slate-200 pb-3 text-xs text-slate-700">
-                <h3 className="mb-1 text-sm font-semibold text-slate-900">{offer.title}</h3>
-                <p>{offer.excerpt}</p>
-              </article>
-            ))}
-          </div>
+          <ApplicationsHistorySection offers={items} />
         </section>
       </main>
     </SiteLayout>
