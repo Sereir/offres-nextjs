@@ -20,6 +20,13 @@ export function SiteLayout({ children }: SiteLayoutProps) {
         </div>
       </header>
       <div className="mx-auto w-full max-w-[1280px] px-4 pt-6 pb-8 md:px-6">{children}</div>
+      <footer className="border-t border-slate-300">
+        <div className="mx-auto flex w-full max-w-[1280px] justify-end px-4 py-4 md:px-6">
+          <Link href="/mentions-legales" className="text-xs text-blue-600 hover:underline">
+            Mentions légales
+          </Link>
+        </div>
+      </footer>
     </div>
   );
 }
