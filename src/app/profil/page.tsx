@@ -1,4 +1,4 @@
-import { AppShell } from "@/components/app-shell";
+import { SiteLayout } from "@/components/site-layout";
 import { JobCard } from "@/components/job-card";
 import { SectionTitle } from "@/components/section-title";
 import { getOffers } from "@/lib/offers-repository";
@@ -9,7 +9,7 @@ export default async function ProfilePage() {
   const history = items.slice(6, 8);
 
   return (
-    <AppShell>
+    <SiteLayout>
       <main className="space-y-10">
         <section>
           <SectionTitle title="Bienvenue" />
@@ -35,6 +35,6 @@ export default async function ProfilePage() {
           </div>
         </section>
       </main>
-    </AppShell>
+    </SiteLayout>
   );
 }

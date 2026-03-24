@@ -1,9 +1,9 @@
-import { AppShell } from "@/components/app-shell";
+import { SiteLayout } from "@/components/site-layout";
 import { SectionTitle } from "@/components/section-title";
 
 export default function LegalPage() {
   return (
-    <AppShell>
+    <SiteLayout>
       <main className="space-y-8">
         <SectionTitle title="Mentions Légales" />
 
@@ -25,6 +25,6 @@ export default function LegalPage() {
           </p>
         </section>
       </main>
-    </AppShell>
+    </SiteLayout>
   );
 }

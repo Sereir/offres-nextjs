@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { AppShell } from "@/components/app-shell";
+import { SiteLayout } from "@/components/site-layout";
 import { JobCard } from "@/components/job-card";
 import { SectionTitle } from "@/components/section-title";
 import { getHomepageContent, getOffers } from "@/lib/offers-repository";
@@ -14,11 +14,15 @@ export default async function Home() {
   const ctaLink = homepage?.latestOffersCtaLink ?? "/offres";
 
   return (
-    <AppShell>
-      <main className="space-y-6">
+    <SiteLayout>
+      <main className="space-y-5">
         <section
-          className="h-56 bg-gradient-to-r from-amber-100 to-slate-100 bg-cover bg-center"
-          style={homepage?.heroImageUrl ? { backgroundImage: `url(${homepage.heroImageUrl})` } : undefined}
+          className="relative -mt-6 ml-[calc(50%-50svw)] h-50 w-[100svw] bg-gradient-to-r from-amber-100 to-slate-100 bg-cover"
+          style={
+            homepage?.heroImageUrl
+              ? { backgroundImage: `url(${homepage.heroImageUrl})`, backgroundPosition: "center center" }
+              : undefined
+          }
           aria-label={homepage?.heroAlt || "Image d'en-tête"}
         />
 
@@ -36,6 +40,6 @@ export default async function Home() {
           </div>
         </section>
       </main>
-    </AppShell>
+    </SiteLayout>
   );
 }

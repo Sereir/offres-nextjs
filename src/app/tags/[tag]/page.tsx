@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { AppShell } from "@/components/app-shell";
+import ArrowBackIosNewOutlinedIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
+import { SiteLayout } from "@/components/site-layout";
 import { JobCard } from "@/components/job-card";
 import { SectionTitle } from "@/components/section-title";
 import { getOffersByTag, getTagNames } from "@/lib/offers-repository";
@@ -30,13 +31,14 @@ export default async function TagPage({ params }: TagPageProps) {
   const filteredOffers = await getOffersByTag(selectedTag);
 
   return (
-    <AppShell>
+    <SiteLayout>
       <main>
         <Link
           href="/offres"
-          className="mb-5 inline-flex border border-slate-300 bg-white px-3 py-1 text-xs text-blue-600"
+          className="mb-5 inline-flex items-center gap-1 border border-slate-300 bg-white px-3 py-1 text-xs text-blue-600"
         >
-          &lt; Voir toutes les offres
+          <ArrowBackIosNewOutlinedIcon className="text-[14px]" />
+          Voir toutes les offres
         </Link>
         <SectionTitle title={selectedTag} meta={`${filteredOffers.length} offres`} />
         <div className="grid gap-3 md:grid-cols-3">
@@ -45,6 +47,6 @@ export default async function TagPage({ params }: TagPageProps) {
           ))}
         </div>
       </main>
-    </AppShell>
+    </SiteLayout>
   );
 }

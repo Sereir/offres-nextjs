@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
-import { AppShell } from "@/components/app-shell";
+import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
+import { SiteLayout } from "@/components/site-layout";
 import { SectionTitle } from "@/components/section-title";
 import { TagChip } from "@/components/tag-chip";
 import { getOfferDetailBySlug } from "@/lib/offers-repository";
@@ -31,10 +32,15 @@ export default async function OfferDetailPage({ params }: OfferDetailPageProps) 
   }
 
   return (
-    <AppShell>
+    <SiteLayout>
       <main>
         <SectionTitle title={offer.title} />
-        {formattedDate ? <p className="mb-2 text-[11px] text-blue-600">📅 {formattedDate}</p> : null}
+        {formattedDate ? (
+          <p className="mb-2 inline-flex items-center gap-1 text-sm text-blue-600">
+            <CalendarTodayOutlinedIcon className="text-[16px]" />
+            {formattedDate}
+          </p>
+        ) : null}
         <div className="mb-4 flex flex-wrap gap-2">
           {offer.tags.map((tag) => (
             <TagChip key={tag} tag={tag} />
@@ -66,6 +72,6 @@ export default async function OfferDetailPage({ params }: OfferDetailPageProps) 
           </div>
         </form>
       </main>
-    </AppShell>
+    </SiteLayout>
   );
 }

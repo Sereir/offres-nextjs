@@ -1,4 +1,7 @@
 import Link from "next/link";
+import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
+import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
+import CodeOutlinedIcon from "@mui/icons-material/CodeOutlined";
 import { OfferItem } from "@/lib/offers-repository";
 
 type JobCardProps = {
@@ -27,36 +30,46 @@ export function JobCard({ offer, showMetadata = false }: JobCardProps) {
   const formattedDate = formatDate(offer.publishedAt);
 
   return (
-    <article className="border border-slate-200 bg-white p-3 text-[11px] text-slate-600">
-      <div className="mb-2 flex items-start justify-between gap-2">
-        <h3 className="text-xs font-semibold text-slate-900">{offer.title}</h3>
-        <button type="button" aria-label="Enregistrer" className="text-slate-500">
-          ☆
-        </button>
-      </div>
-
-      {showMetadata ? (
-        <div className="mb-2 space-y-1 text-[10px] text-blue-600">
-          {formattedDate ? <p>📅 {formattedDate}</p> : null}
-          {offer.tags.length > 0 ? (
-            <p>
-              {offer.tags.map((tag, index) => (
-                <span key={`${offer.slug}-${tag}`}>
-                  <Link href={`/tags/${tagToSlug(tag)}`} className="text-blue-600">
-                    {tag}
-                  </Link>
-                  {index < offer.tags.length - 1 ? ", " : ""}
-                </span>
-              ))}
-            </p>
-          ) : null}
+    <article className="relative border border-slate-200 bg-white p-5 text-sm text-slate-600 transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md focus-within:border-slate-300 focus-within:shadow-md">
+      <Link
+        href={`/offres/${offer.slug}`}
+        aria-label={`Voir l'offre ${offer.title}`}
+        className="absolute inset-0 z-10"
+      />
+      <div className="relative z-20 pointer-events-none">
+        <div className="mb-3 flex items-start justify-between gap-3">
+          <h3 className="text-lg font-semibold text-slate-900">{offer.title}</h3>
+          <span aria-hidden="true" className="inline-flex items-center text-slate-500">
+            <BookmarkBorderOutlinedIcon className="text-[20px]" />
+          </span>
         </div>
-      ) : null}
 
-      <p className="line-clamp-2 mb-2 text-[10px] leading-relaxed">{offer.excerpt}</p>
-      <Link href={`/offres/${offer.slug}`} className="text-[10px] font-medium text-blue-600">
-        Voir l&apos;offre
-      </Link>
+        {showMetadata ? (
+          <div className="mb-3 space-y-1 text-xs text-blue-600">
+            {formattedDate ? (
+              <p className="inline-flex items-center gap-1">
+                <CalendarTodayOutlinedIcon className="text-[14px]" />
+                {formattedDate}
+              </p>
+            ) : null}
+            <br />
+            {offer.tags.length > 0 ? (
+              <p className="inline-flex items-center gap-1">
+                <CodeOutlinedIcon className="text-[14px]" />
+                {offer.tags.map((tag, index) => (
+                  <span key={`${offer.slug}-${tag}`}>
+                    <Link href={`/tags/${tagToSlug(tag)}`} className="pointer-events-auto text-blue-600">
+                      {tag}
+                    </Link>
+                    {index < offer.tags.length - 1 ? ", " : ""}
+                  </span>
+                ))}
+              </p>
+            ) : null}
+          </div>
+        ) : null}
+        <p className="line-clamp-3 text-sm leading-relaxed">{offer.excerpt}</p>
+      </div>
     </article>
   );
 }

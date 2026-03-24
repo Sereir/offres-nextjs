@@ -1,4 +1,4 @@
-import { AppShell } from "@/components/app-shell";
+import { SiteLayout } from "@/components/site-layout";
 import { JobCard } from "@/components/job-card";
 import { SectionTitle } from "@/components/section-title";
 import { TagChip } from "@/components/tag-chip";
@@ -9,7 +9,7 @@ export default async function OffersPage() {
   const tagNames = await getTagNames();
 
   return (
-    <AppShell>
+    <SiteLayout>
       <main>
         <SectionTitle title="Offres d'emploi" meta={`${items.length} offres`} />
         <div className="mb-5 flex flex-wrap gap-2">
@@ -23,6 +23,6 @@ export default async function OffersPage() {
           ))}
         </div>
       </main>
-    </AppShell>
+    </SiteLayout>
   );
 }
