@@ -3,6 +3,11 @@ import { OfferItem, getItemBySlug as getLoremItemBySlug, getItemsByTag as getLor
 
 type OfferDocument = prismic.PrismicDocument;
 
+export type OfferDetail = OfferItem & {
+  longDescription: string;
+  extraFields: Array<{ label: string; value: string }>;
+};
+
 const defaultExcerpt =
   "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.";
 
@@ -71,6 +76,46 @@ function getArrayFromUnknown(value: unknown): string[] {
     .map((entry) => entry.trim());
 }
 
+function formatFieldLabel(key: string) {
+  return key
+    .replace(/_/g, " ")
+    .replace(/([a-z])([A-Z])/g, "$1 $2")
+    .split(" ")
+    .filter(Boolean)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
+
+function getExtraFieldsFromPrismicData(data: Record<string, unknown>) {
+  const excludedKeys = new Set([
+    "title",
+    "company",
+    "location",
+    "excerpt",
+    "description",
+    "content",
+    "technologies",
+    "tags",
+  ]);
+
+  const entries = Object.entries(data)
+    .filter(([key]) => !excludedKeys.has(key))
+    .map(([key, value]) => {
+      const textValue = getTextFromUnknown(value);
+      if (!textValue) {
+        return null;
+      }
+
+      return {
+        label: formatFieldLabel(key),
+        value: textValue,
+      };
+    })
+    .filter((entry): entry is { label: string; value: string } => Boolean(entry));
+
+  return entries;
+}
+
 function mapOfferFromPrismic(document: OfferDocument): OfferItem {
   const data = document.data;
   const title = getTextFromUnknown(data.title) ?? "Lorem Ipsum Dolor";
@@ -97,6 +142,22 @@ function mapOfferFromPrismic(document: OfferDocument): OfferItem {
     tags,
     excerpt,
     description,
+  };
+}
+
+function mapOfferDetailFromPrismic(document: OfferDocument): OfferDetail {
+  const baseOffer = mapOfferFromPrismic(document);
+  const data = document.data as Record<string, unknown>;
+
+  const longDescription =
+    getTextFromUnknown(data.description) ??
+    getTextFromUnknown(data.content) ??
+    baseOffer.description;
+
+  return {
+    ...baseOffer,
+    longDescription,
+    extraFields: getExtraFieldsFromPrismicData(data),
   };
 }
 
@@ -127,18 +188,58 @@ async function fetchPrismicOffers() {
   return documents.map(mapOfferFromPrismic);
 }
 
+async function fetchPrismicOfferBySlug(slug: string) {
+  const client = getPrismicClient();
+  if (!client) {
+    return null;
+  }
+
+  try {
+    return await client.getByUID("offer", slug);
+  } catch {
+    return null;
+  }
+}
+
 export async function getOffers() {
   const prismicOffers = await fetchPrismicOffers();
   return prismicOffers ?? items;
 }
 
 export async function getOfferBySlug(slug: string) {
-  const prismicOffers = await fetchPrismicOffers();
-  if (prismicOffers) {
-    return prismicOffers.find((offer) => offer.slug === slug);
+  const prismicOffer = await fetchPrismicOfferBySlug(slug);
+  if (prismicOffer) {
+    return mapOfferFromPrismic(prismicOffer);
   }
 
   return getLoremItemBySlug(slug);
+}
+
+export async function getOfferDetailBySlug(slug: string): Promise<OfferDetail | null> {
+  const prismicOffer = await fetchPrismicOfferBySlug(slug);
+  if (prismicOffer) {
+    return mapOfferDetailFromPrismic(prismicOffer);
+  }
+
+  const loremOffer = getLoremItemBySlug(slug);
+  if (!loremOffer) {
+    return null;
+  }
+
+  return {
+    ...loremOffer,
+    longDescription: loremOffer.description,
+    extraFields: [
+      {
+        label: "Contrat",
+        value: "Lorem ipsum",
+      },
+      {
+        label: "Expérience",
+        value: "Dolor sit amet",
+      },
+    ],
+  };
 }
 
 export async function getOffersByTag(tag: string) {
