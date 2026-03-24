@@ -41,7 +41,7 @@ export default async function TagPage({ params }: TagPageProps) {
         <SectionTitle title={selectedTag} meta={`${filteredOffers.length} offres`} />
         <div className="grid gap-3 md:grid-cols-3">
           {filteredOffers.map((offer) => (
-            <JobCard key={offer.slug} offer={offer} />
+            <JobCard key={offer.slug} offer={offer} showMetadata />
           ))}
         </div>
       </main>

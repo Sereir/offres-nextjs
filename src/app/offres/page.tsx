@@ -19,7 +19,7 @@ export default async function OffersPage() {
         </div>
         <div className="grid gap-3 md:grid-cols-3">
           {items.map((offer) => (
-            <JobCard key={offer.slug} offer={offer} />
+            <JobCard key={offer.slug} offer={offer} showMetadata />
           ))}
         </div>
       </main>

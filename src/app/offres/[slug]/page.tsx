@@ -8,9 +8,23 @@ type OfferDetailPageProps = {
   params: Promise<{ slug: string }>;
 };
 
+function formatDate(dateValue?: string | null) {
+  if (!dateValue) {
+    return null;
+  }
+
+  const parsedDate = new Date(dateValue);
+  if (Number.isNaN(parsedDate.getTime())) {
+    return dateValue;
+  }
+
+  return new Intl.DateTimeFormat("fr-FR").format(parsedDate);
+}
+
 export default async function OfferDetailPage({ params }: OfferDetailPageProps) {
   const { slug } = await params;
   const offer = await getOfferDetailBySlug(slug);
+  const formattedDate = formatDate(offer?.publishedAt);
 
   if (!offer) {
     notFound();
@@ -20,9 +34,7 @@ export default async function OfferDetailPage({ params }: OfferDetailPageProps) 
     <AppShell>
       <main>
         <SectionTitle title={offer.title} />
-        <p className="mb-3 text-xs text-blue-600">
-          {offer.location}, {offer.company}
-        </p>
+        {formattedDate ? <p className="mb-2 text-[11px] text-blue-600">📅 {formattedDate}</p> : null}
         <div className="mb-4 flex flex-wrap gap-2">
           {offer.tags.map((tag) => (
             <TagChip key={tag} tag={tag} />
@@ -39,20 +51,9 @@ export default async function OfferDetailPage({ params }: OfferDetailPageProps) 
             ))}
         </div>
 
-        {offer.extraFields.length > 0 ? (
-          <section className="mb-8 grid gap-3 border border-slate-200 bg-white p-4 md:grid-cols-2">
-            {offer.extraFields.map((field) => (
-              <article key={`${field.label}-${field.value}`} className="space-y-1">
-                <h2 className="text-xs font-semibold text-slate-900">{field.label}</h2>
-                <p className="text-xs text-slate-700">{field.value}</p>
-              </article>
-            ))}
-          </section>
-        ) : null}
-
         <form className="space-y-2">
           <textarea
-            placeholder="Pourquoi ce poste m'intéresse..."
+            placeholder="Postuler à cette offre..."
             className="h-28 w-full border border-slate-300 bg-white p-3 text-sm outline-none"
           />
           <div className="flex justify-end">

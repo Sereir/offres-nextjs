@@ -100,37 +100,26 @@ interface OfferDocumentData {
   title: prismic.KeyTextField;
 
   /**
-   * Entreprise field in *offer*
+   * Date field in *offer*
    *
-   * - **Field Type**: Text
+   * - **Field Type**: Date
    * - **Placeholder**: *None*
-   * - **API ID Path**: offer.company
+   * - **API ID Path**: offer.date
    * - **Tab**: Main
-   * - **Documentation**: https://prismic.io/docs/fields/text
+   * - **Documentation**: https://prismic.io/docs/fields/date
    */
-  company: prismic.KeyTextField;
+  date: prismic.DateField;
 
   /**
-   * Localisation field in *offer*
+   * Technologies field in *offer*
    *
-   * - **Field Type**: Text
+   * - **Field Type**: Group
    * - **Placeholder**: *None*
-   * - **API ID Path**: offer.location
+   * - **API ID Path**: offer.technologies[]
    * - **Tab**: Main
-   * - **Documentation**: https://prismic.io/docs/fields/text
+   * - **Documentation**: https://prismic.io/docs/fields/repeatable-group
    */
-  location: prismic.KeyTextField;
-
-  /**
-   * Extrait field in *offer*
-   *
-   * - **Field Type**: Text
-   * - **Placeholder**: *None*
-   * - **API ID Path**: offer.excerpt
-   * - **Tab**: Main
-   * - **Documentation**: https://prismic.io/docs/fields/text
-   */
-  excerpt: prismic.KeyTextField;
+  technologies: prismic.GroupField<Simplify<OfferDocumentDataTechnologiesItem>>;
 
   /**
    * Description field in *offer*
@@ -144,15 +133,15 @@ interface OfferDocumentData {
   description: prismic.RichTextField;
 
   /**
-   * Technologies field in *offer*
+   * Extrait field in *offer*
    *
-   * - **Field Type**: Group
+   * - **Field Type**: Text
    * - **Placeholder**: *None*
-   * - **API ID Path**: offer.technologies[]
+   * - **API ID Path**: offer.excerpt
    * - **Tab**: Main
-   * - **Documentation**: https://prismic.io/docs/fields/repeatable-group
+   * - **Documentation**: https://prismic.io/docs/fields/text
    */
-  technologies: prismic.GroupField<Simplify<OfferDocumentDataTechnologiesItem>>;
+  excerpt: prismic.KeyTextField;
 }
 
 /**

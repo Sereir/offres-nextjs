@@ -29,9 +29,6 @@ export default async function ProfilePage() {
             {history.map((offer) => (
               <article key={offer.slug} className="border-b border-slate-200 pb-3 text-xs text-slate-700">
                 <h3 className="mb-1 text-sm font-semibold text-slate-900">{offer.title}</h3>
-                <p className="mb-1 text-[11px] text-blue-600">
-                  {offer.location}, {offer.company}
-                </p>
                 <p>{offer.excerpt}</p>
               </article>
             ))}

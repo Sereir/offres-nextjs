@@ -1,15 +1,20 @@
 import * as prismic from "@prismicio/client";
-import { OfferItem, getItemBySlug as getLoremItemBySlug, getItemsByTag as getLoremItemsByTag, items } from "@/lib/lorem-data";
 
 type OfferDocument = prismic.PrismicDocument;
+
+export type OfferItem = {
+  slug: string;
+  title: string;
+  tags: string[];
+  excerpt: string;
+  description: string;
+  publishedAt?: string | null;
+};
 
 export type OfferDetail = OfferItem & {
   longDescription: string;
   extraFields: Array<{ label: string; value: string }>;
 };
-
-const defaultExcerpt =
-  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.";
 
 function getTextFromUnknown(value: unknown): string | null {
   if (typeof value === "string") {
@@ -118,30 +123,30 @@ function getExtraFieldsFromPrismicData(data: Record<string, unknown>) {
 
 function mapOfferFromPrismic(document: OfferDocument): OfferItem {
   const data = document.data;
-  const title = getTextFromUnknown(data.title) ?? "Lorem Ipsum Dolor";
-  const company = getTextFromUnknown(data.company) ?? "Lorem Company";
-  const location = getTextFromUnknown(data.location) ?? "Lorem City";
-  const excerpt = getTextFromUnknown(data.excerpt) ?? defaultExcerpt;
+  const title = getTextFromUnknown(data.title) ?? "";
+  const excerpt = getTextFromUnknown(data.excerpt) ?? "";
   const description =
     getTextFromUnknown(data.description) ??
     getTextFromUnknown(data.content) ??
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
+    "";
+
+  const publishedAt =
+    getTextFromUnknown(data.date) ?? getTextFromUnknown(data.publication_date) ?? null;
 
   const tags =
     getArrayFromUnknown(data.technologies).length > 0
       ? getArrayFromUnknown(data.technologies)
       : getArrayFromUnknown(data.tags).length > 0
         ? getArrayFromUnknown(data.tags)
-        : ["Techno 1"];
+        : [];
 
   return {
     slug: document.uid ?? `offre-${document.id}`,
     title,
-    company,
-    location,
     tags,
     excerpt,
     description,
+    publishedAt,
   };
 }
 
@@ -203,7 +208,7 @@ async function fetchPrismicOfferBySlug(slug: string) {
 
 export async function getOffers() {
   const prismicOffers = await fetchPrismicOffers();
-  return prismicOffers ?? items;
+  return prismicOffers ?? [];
 }
 
 export async function getOfferBySlug(slug: string) {
@@ -212,7 +217,7 @@ export async function getOfferBySlug(slug: string) {
     return mapOfferFromPrismic(prismicOffer);
   }
 
-  return getLoremItemBySlug(slug);
+  return null;
 }
 
 export async function getOfferDetailBySlug(slug: string): Promise<OfferDetail | null> {
@@ -221,25 +226,7 @@ export async function getOfferDetailBySlug(slug: string): Promise<OfferDetail | 
     return mapOfferDetailFromPrismic(prismicOffer);
   }
 
-  const loremOffer = getLoremItemBySlug(slug);
-  if (!loremOffer) {
-    return null;
-  }
-
-  return {
-    ...loremOffer,
-    longDescription: loremOffer.description,
-    extraFields: [
-      {
-        label: "Contrat",
-        value: "Lorem ipsum",
-      },
-      {
-        label: "Expérience",
-        value: "Dolor sit amet",
-      },
-    ],
-  };
+  return null;
 }
 
 export async function getOffersByTag(tag: string) {
@@ -250,7 +237,7 @@ export async function getOffersByTag(tag: string) {
     );
   }
 
-  return getLoremItemsByTag(tag);
+  return [];
 }
 
 export async function getTagNames() {
