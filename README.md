@@ -40,8 +40,8 @@ npm install
 Créer un fichier `.env.local` (ou utiliser `.env`) à la racine :
 
 ```env
-PRISMIC_REPOSITORY_NAME=ton-repository
-PRISMIC_ACCESS_TOKEN=ton-token-optionnel
+PRISMIC_REPOSITORY_NAME=nom-du-repository
+PRISMIC_ACCESS_TOKEN=token-optionnel
 ```
 
 ## Lancer le projet
@@ -64,4 +64,4 @@ Puis ouvrir http://localhost:3000.
 
 Déploiement recommandé : Vercel.
 
-Pense à ajouter les variables d'environnement Prismic dans le projet Vercel avant de déployer.
+Penser à ajouter les variables d'environnement Prismic dans le projet Vercel avant de déployer.
