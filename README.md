@@ -1,36 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# DEV — Offres tech
 
-## Getting Started
+Plateforme d'offres d'emploi tech construite avec Next.js (App Router), Prismic, Zustand et Tailwind.
 
-First, run the development server:
+## Stack technique
+
+- Next.js 16 (App Router) + TypeScript
+- Tailwind CSS v4
+- Prismic (`@prismicio/client`, `@prismicio/next`, `@prismicio/react`)
+- Zustand (offres enregistrées + historique des candidatures)
+- Material UI Icons
+
+## Fonctionnalités implémentées
+
+- Affichage des offres depuis Prismic
+- Page détail d'offre
+- Filtres par technologies/tags
+- Enregistrement d'offres (bookmark) sur le profil
+- Vérification de disponibilité des offres enregistrées (suppression des slugs absents)
+- Formulaire de candidature et historique des candidatures
+- Layout responsive + pages légales/profil
+
+## Routes principales
+
+- `/` : accueil + dernières opportunités
+- `/offres` : liste des offres
+- `/offres/[slug]` : détail d'une offre
+- `/tags/[tag]` : offres filtrées par techno/tag
+- `/profil` : offres enregistrées + historique candidatures
+- `/mentions-legales` : mentions légales
+
+## Installation
+
+```bash
+npm install
+```
+
+## Variables d'environnement
+
+Créer un fichier `.env.local` (ou utiliser `.env`) à la racine :
+
+```env
+PRISMIC_REPOSITORY_NAME=ton-repository
+PRISMIC_ACCESS_TOKEN=ton-token-optionnel
+```
+
+## Lancer le projet
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Puis ouvrir http://localhost:3000.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts utiles
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `npm run dev` : mode développement
+- `npm run build` : build de production
+- `npm run start` : lancer la build
+- `npm run lint` : lint ESLint
+- `npm run slicemachine` : interface Slice Machine
 
-## Learn More
+## Déploiement
 
-To learn more about Next.js, take a look at the following resources:
+Déploiement recommandé : Vercel.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Pense à ajouter les variables d'environnement Prismic dans le projet Vercel avant de déployer.
