@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { AppShell } from "@/components/app-shell";
 import { SectionTitle } from "@/components/section-title";
 import { TagChip } from "@/components/tag-chip";
-import { getItemBySlug } from "@/lib/lorem-data";
+import { getOfferBySlug } from "@/lib/offers-repository";
 
 type OfferDetailPageProps = {
   params: Promise<{ slug: string }>;
@@ -10,7 +10,7 @@ type OfferDetailPageProps = {
 
 export default async function OfferDetailPage({ params }: OfferDetailPageProps) {
   const { slug } = await params;
-  const offer = getItemBySlug(slug);
+  const offer = await getOfferBySlug(slug);
 
   if (!offer) {
     notFound();

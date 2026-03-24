@@ -2,10 +2,11 @@ import Link from "next/link";
 import { AppShell } from "@/components/app-shell";
 import { JobCard } from "@/components/job-card";
 import { SectionTitle } from "@/components/section-title";
-import { items } from "@/lib/lorem-data";
+import { getOffers } from "@/lib/offers-repository";
 
-export default function Home() {
-  const latestOffers = items.slice(0, 6);
+export default async function Home() {
+  const offers = await getOffers();
+  const latestOffers = offers.slice(0, 6);
 
   return (
     <AppShell>

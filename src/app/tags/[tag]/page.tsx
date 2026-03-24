@@ -2,7 +2,7 @@ import Link from "next/link";
 import { AppShell } from "@/components/app-shell";
 import { JobCard } from "@/components/job-card";
 import { SectionTitle } from "@/components/section-title";
-import { getItemsByTag, tagNames } from "@/lib/lorem-data";
+import { getOffersByTag, getTagNames } from "@/lib/offers-repository";
 
 type TagPageProps = {
   params: Promise<{ tag: string }>;
@@ -21,12 +21,13 @@ function formatTag(tag: string) {
 
 export default async function TagPage({ params }: TagPageProps) {
   const { tag } = await params;
+  const tagNames = await getTagNames();
   const readableTag = formatTag(normalizeTag(decodeURIComponent(tag)));
   const availableTag = tagNames.find(
     (currentTag) => currentTag.toLowerCase() === readableTag.toLowerCase(),
   );
   const selectedTag = availableTag ?? readableTag;
-  const filteredOffers = getItemsByTag(selectedTag);
+  const filteredOffers = await getOffersByTag(selectedTag);
 
   return (
     <AppShell>
