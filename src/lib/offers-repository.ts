@@ -16,6 +16,15 @@ export type OfferDetail = OfferItem & {
   extraFields: Array<{ label: string; value: string }>;
 };
 
+export type HomepageContent = {
+  heroImageUrl: string | null;
+  heroAlt: string;
+  latestOffersTitle: string;
+  latestOffersCount: number;
+  latestOffersCtaLabel: string;
+  latestOffersCtaLink: string;
+};
+
 function getTextFromUnknown(value: unknown): string | null {
   if (typeof value === "string") {
     const trimmedValue = value.trim();
@@ -79,6 +88,40 @@ function getArrayFromUnknown(value: unknown): string[] {
     })
     .filter((entry): entry is string => Boolean(entry))
     .map((entry) => entry.trim());
+}
+
+function getNumberFromUnknown(value: unknown): number | null {
+  if (typeof value === "number" && Number.isFinite(value)) {
+    return value;
+  }
+
+  if (typeof value === "string") {
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : null;
+  }
+
+  return null;
+}
+
+function getLinkFromUnknown(value: unknown): string | null {
+  if (typeof value === "string") {
+    const trimmedValue = value.trim();
+    return trimmedValue.length > 0 ? trimmedValue : null;
+  }
+
+  if (value && typeof value === "object") {
+    const asLinkValue = prismic.asLink(value as prismic.LinkField);
+    if (asLinkValue) {
+      return asLinkValue;
+    }
+
+    const urlProperty = (value as { url?: unknown }).url;
+    if (typeof urlProperty === "string" && urlProperty.trim().length > 0) {
+      return urlProperty.trim();
+    }
+  }
+
+  return null;
 }
 
 function formatFieldLabel(key: string) {
@@ -206,6 +249,19 @@ async function fetchPrismicOfferBySlug(slug: string) {
   }
 }
 
+async function fetchPrismicHomepage() {
+  const client = getPrismicClient();
+  if (!client) {
+    return null;
+  }
+
+  try {
+    return await client.getSingle("homepage");
+  } catch {
+    return null;
+  }
+}
+
 export async function getOffers() {
   const prismicOffers = await fetchPrismicOffers();
   return prismicOffers ?? [];
@@ -243,4 +299,30 @@ export async function getOffersByTag(tag: string) {
 export async function getTagNames() {
   const offers = await getOffers();
   return dedupeTags(offers);
+}
+
+export async function getHomepageContent(): Promise<HomepageContent | null> {
+  const homepageDocument = await fetchPrismicHomepage();
+  if (!homepageDocument) {
+    return null;
+  }
+
+  const data = homepageDocument.data as Record<string, unknown>;
+
+  const heroImageUrl =
+    (data.hero_image as { url?: string } | undefined)?.url?.trim() || null;
+  const heroAlt =
+    (data.hero_image as { alt?: string } | undefined)?.alt?.trim() ||
+    getTextFromUnknown(data.hero_alt) ||
+    "Image d'en-tête";
+
+  return {
+    heroImageUrl,
+    heroAlt,
+    latestOffersTitle: getTextFromUnknown(data.latest_offers_title) || "Nos dernières opportunités",
+    latestOffersCount: getNumberFromUnknown(data.latest_offers_count) || 6,
+    latestOffersCtaLabel:
+      getTextFromUnknown(data.latest_offers_cta_label) || "Voir toutes les offres",
+    latestOffersCtaLink: getLinkFromUnknown(data.latest_offers_cta_link) || "/offres",
+  };
 }
