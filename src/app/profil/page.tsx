@@ -1,12 +1,11 @@
 import { SiteLayout } from "@/components/site-layout";
-import { JobCard } from "@/components/job-card";
+import { SavedOffersSection } from "@/components/saved-offers-section";
 import { SectionTitle } from "@/components/section-title";
 import { getOffers } from "@/lib/offers-repository";
 
 export default async function ProfilePage() {
   const items = await getOffers();
-  const savedOffers = items.slice(0, 6);
-  const history = items.slice(6, 8);
+  const history = items.slice(0, 2);
 
   return (
     <SiteLayout>
@@ -14,11 +13,7 @@ export default async function ProfilePage() {
         <section>
           <SectionTitle title="Bienvenue" />
           <h2 className="mb-4 text-sm font-semibold text-blue-600">Offres enregistrées</h2>
-          <div className="grid gap-3 md:grid-cols-3">
-            {savedOffers.map((offer) => (
-              <JobCard key={offer.slug} offer={offer} />
-            ))}
-          </div>
+          <SavedOffersSection offers={items} />
         </section>
 
         <section>

@@ -1,8 +1,13 @@
+"use client";
+
+import { MouseEvent } from "react";
 import Link from "next/link";
 import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
+import BookmarkOutlinedIcon from "@mui/icons-material/BookmarkOutlined";
 import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
 import CodeOutlinedIcon from "@mui/icons-material/CodeOutlined";
 import { OfferItem } from "@/lib/offers-repository";
+import { useSavedOffersStore } from "@/stores/saved-offers-store";
 
 type JobCardProps = {
   offer: OfferItem;
@@ -28,6 +33,14 @@ function tagToSlug(tag: string) {
 
 export function JobCard({ offer, showMetadata = false }: JobCardProps) {
   const formattedDate = formatDate(offer.publishedAt);
+  const isSaved = useSavedOffersStore((state) => state.isOfferSaved(offer.slug));
+  const toggleSavedOffer = useSavedOffersStore((state) => state.toggleSavedOffer);
+
+  function handleToggleSavedOffer(event: MouseEvent<HTMLButtonElement>) {
+    event.preventDefault();
+    event.stopPropagation();
+    toggleSavedOffer(offer.slug);
+  }
 
   return (
     <article className="relative border border-slate-200 bg-white p-5 text-sm text-slate-600 transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md focus-within:border-slate-300 focus-within:shadow-md">
@@ -39,9 +52,18 @@ export function JobCard({ offer, showMetadata = false }: JobCardProps) {
       <div className="relative z-20 pointer-events-none">
         <div className="mb-3 flex items-start justify-between gap-3">
           <h3 className="text-lg font-semibold text-slate-900">{offer.title}</h3>
-          <span aria-hidden="true" className="inline-flex items-center text-slate-500">
-            <BookmarkBorderOutlinedIcon className="text-[20px]" />
-          </span>
+          <button
+            type="button"
+            aria-label={isSaved ? "Retirer des offres enregistrées" : "Enregistrer l'offre"}
+            onClick={handleToggleSavedOffer}
+            className="pointer-events-auto inline-flex items-center text-slate-500"
+          >
+            {isSaved ? (
+              <BookmarkOutlinedIcon className="text-[20px] text-blue-600" />
+            ) : (
+              <BookmarkBorderOutlinedIcon className="text-[20px]" />
+            )}
+          </button>
         </div>
 
         {showMetadata ? (
